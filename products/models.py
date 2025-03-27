@@ -5,7 +5,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.DecimalField()
+    price = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     quntity = models.PositiveIntegerField()
     image = models.ImageField()
     created_at = models.DateTimeField(auto_now_add=True)
