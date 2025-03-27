@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'products',
     'contactus'
 ]
@@ -132,3 +131,8 @@ MEDIA_URL = '/attachments/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'attachments')
 
 FILE_UPLOAD_TEMP_DIR = os.path.join(BASE_DIR, 'tmp')
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
