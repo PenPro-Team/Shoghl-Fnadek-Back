@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "cecc5b18-d84d-406b-b915-bce8668a1c4e",
+		"name": "Shoghl_Fnadek",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40668884"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products with search, filter and pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/?page=1&search=pr&minprice=10&maxprice=25",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "search",
+									"value": "pr"
+								},
+								{
+									"key": "minprice",
+									"value": "10"
+								},
+								{
+									"key": "maxprice",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Detailed Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Pro From API",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is a product added from API",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/aboelmagd/Downloads/gratisography-cool-cat-800x525.jpg"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/home/aboelmagd/Downloads/background.jpg",
+										"/home/aboelmagd/Downloads/galaxy.jpg",
+										"/home/aboelmagd/Downloads/panda.jpg",
+										"/home/aboelmagd/Downloads/planet.jpg"
+									]
+								},
+								{
+									"key": "price",
+									"value": "25",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\":\"50\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Another way to Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":5,\n    \"price\":\"100\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create To Delete",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Pro From API",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is a product added from API",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/aboelmagd/Downloads/gratisography-cool-cat-800x525.jpg"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/home/aboelmagd/Downloads/background.jpg",
+										"/home/aboelmagd/Downloads/galaxy.jpg",
+										"/home/aboelmagd/Downloads/panda.jpg",
+										"/home/aboelmagd/Downloads/planet.jpg"
+									]
+								},
+								{
+									"key": "price",
+									"value": "25",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "50",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/6",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "another way to delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\" : 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
