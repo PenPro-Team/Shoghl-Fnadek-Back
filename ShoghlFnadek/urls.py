@@ -23,7 +23,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('contactus/', include('contactus.urls')),
-    path('products/' , include('products.urls') ),
+    path('products/' , include('products.urls')),
+    path('api/' , include('providers.urls')),  # Changed from 'orders/' to 'api/'
 ]
 
 if settings.DEBUG:
