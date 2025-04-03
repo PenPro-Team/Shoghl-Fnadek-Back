@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cecc5b18-d84d-406b-b915-bce8668a1c4e",
+		"_postman_id": "c113d057-428a-4030-9825-88f814de3d4c",
 		"name": "Shoghl_Fnadek",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40668884"
+		"_exporter_id": "43093767",
+		"_collection_link": "https://penpro-7660.postman.co/workspace/PenPro~a5c2064c-ac35-4303-8a46-bdf5d7166638/collection/43093767-c113d057-428a-4030-9825-88f814de3d4c?action=share&source=collection_link&creator=43093767"
 	},
 	"item": [
 		{
@@ -319,6 +320,127 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "ah2261@fayoum.edu.eg",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "A7med2001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}users/login/",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "ah1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "A7med2001",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "tareq",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "hamdy",
+									"type": "text"
+								},
+								{
+									"key": "phone_number",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "dcs",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}users/register/",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000/",
+			"type": "string"
 		}
 	]
 }
