@@ -25,7 +25,8 @@ urlpatterns = [
     path('contactus/', include('contactus.urls')),
     path('products/' , include('products.urls')),
     path('api/' , include('providers.urls')),  # Changed from 'orders/' to 'api/'
-]
+    path('users/' , include('users.urls')),
+]  
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
