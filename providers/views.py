@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from products.models import Product
 from .models import Provider, Order, Payment
 from .serializers import ProviderSerializer, OrderSerializer, PaymentSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
@@ -20,8 +21,26 @@ class ProviderViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+    permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
+
+    @action(detail=False, methods=['get'])
+    def my_orders(self, request):
+        print(f"User requesting orders: {request.user.id}")
+        orders = Order.objects.filter(user=request.user).order_by('-order_date')
+        print(f"Found {orders.count()} orders")
+        serializer = self.get_serializer(orders, many=True)
+        print("Serialized data:", serializer.data)
+        return Response({
+            'count': orders.count(),
+            'results': serializer.data
+        })
+
+    def get_queryset(self):
+        print(f"Action: {self.action}")
+        if self.action == 'my_orders':
+            return Order.objects.filter(user=self.request.user).order_by('-order_date')
+        return Order.objects.all()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -133,7 +152,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             }
 
             print("Prepared order_data:", order_data)
-            serializer = self.get_serializer(data=order_data)
+            serializer = self.get_serializer(data=order_data, context={'request': request})
             
             if not serializer.is_valid():
                 print("Validation errors:", serializer.errors)
@@ -160,7 +179,11 @@ class OrderViewSet(viewsets.ModelViewSet):
                     order.delete()
                     raise
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Include order_id in response
+            response_data = serializer.data
+            response_data['order_id'] = order.order_id  # Assuming order_id is a field in your Order model
+            
+            return Response(response_data, status=status.HTTP_201_CREATED)
 
         except Exception as e:
             print(f"Error processing order: {str(e)}")
@@ -168,3 +191,12 @@ class OrderViewSet(viewsets.ModelViewSet):
                 {'error': str(e)}, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        try:
+            serializer.save()
+        except ValueError as e:
+            raise serializers.ValidationError(str(e))
