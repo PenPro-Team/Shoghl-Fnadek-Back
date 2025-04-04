@@ -1,5 +1,13 @@
 from django.db import models
 import uuid
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from products.models import Product
+import logging
+from django.db import transaction
+
+logger = logging.getLogger(__name__)
 
 class Provider(models.Model):
     name = models.CharField(max_length=255)
@@ -17,9 +25,9 @@ class Provider(models.Model):
 class Order(models.Model):
     ORDER_STATUS_CHOICES = [
         ('pending', 'Pending'),
-        ('processing', 'Processing'),
-        ('shipped', 'Shipped'),
-        ('delivered', 'Delivered'),
+        ('confirmed', 'Confirmed'),
+        ('canceled', 'Canceled'),
+        ('completed', 'Completed'),
     ]
     
     order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -37,6 +45,65 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='pending')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='orders'
+    )
+
+    @transaction.atomic
+    def update_product_quantities(self, restore=False):
+        print(f"Updating quantities for order {self.order_id} - Restore: {restore}")
+        for item in self.items.all():
+            try:
+                product = Product.objects.select_for_update().get(id=item.product_id)
+                old_quantity = product.quantity
+                print(f"Product {product.id} current quantity: {old_quantity}")
+                
+                if restore:
+                    product.quantity += item.quantity
+                    print(f"Restoring {item.quantity} units to product {product.id}")
+                else:
+                    if product.quantity >= item.quantity:
+                        product.quantity -= item.quantity
+                        print(f"Reducing {item.quantity} units from product {product.id}")
+                    else:
+                        error_msg = f"Insufficient stock for product {product.title}"
+                        print(error_msg)
+                        raise ValueError(error_msg)
+                
+                print(f"Saving product {product.id} with new quantity: {product.quantity}")
+                product.save()
+            except Product.DoesNotExist:
+                print(f"Product {item.product_id} not found")
+                continue
+            except Exception as e:
+                print(f"Error updating product {item.product_id}: {str(e)}")
+                raise
+
+@receiver(post_save, sender=Order)
+def handle_order_status_change(sender, instance, created, update_fields, **kwargs):
+    print(f"Signal triggered for order {instance.order_id}")
+    try:
+        if not created:
+            # Get the instance directly from database to get pre-save state
+            with transaction.atomic():
+                previous_instance = Order.objects.select_for_update().get(id=instance.id)
+                previous_status = previous_instance.status
+                print(f"Previous status from DB: {previous_status}, New status: {instance.status}")
+
+                if previous_status != instance.status:
+                    if instance.status == 'canceled' and previous_status in ['pending', 'confirmed']:
+                        print(f"Order {instance.order_id} canceled - restoring quantities")
+                        instance.update_product_quantities(restore=True)
+                    elif previous_status == 'canceled' and instance.status in ['pending', 'confirmed']:
+                        print(f"Order {instance.order_id} reactivated - reducing quantities")
+                        instance.update_product_quantities()
+
+    except Exception as e:
+        print(f"Error in signal handler: {str(e)}")
+        raise
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
